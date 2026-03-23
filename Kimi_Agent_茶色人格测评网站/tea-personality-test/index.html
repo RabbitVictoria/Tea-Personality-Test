@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>茶色人格測試 | Tea-Color Personality Test</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- html2canvas for saving results as image -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- 語言選擇頁面 -->
+    <div id="language-page" class="page active">
+        <div class="language-container">
+            <div class="logo-section">
+                <div class="fruit-pattern"></div>
+                <h1 class="main-title">茶色人格測試</h1>
+                <p class="subtitle">Tea-Color Personality Test</p>
+            </div>
+            <div class="language-buttons">
+                <button class="lang-btn" onclick="selectLanguage('zh')">繁體中文</button>
+                <button class="lang-btn" onclick="selectLanguage('en')">English</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 首頁 -->
+    <div id="home-page" class="page">
+        <div class="home-container">
+            <div class="home-header">
+                <div class="fruit-decoration"></div>
+                <h1 class="home-title" data-zh="茶色人格測試" data-en="Tea-Color Personality Test">茶色人格測試</h1>
+                <p class="home-tagline" data-zh="一杯鮮果，喜茶添色" data-en="A fruitful taste of Heytea">一杯鮮果，喜茶添色</p>
+            </div>
+            <div class="home-content">
+                <p class="home-description" 
+                   data-zh="透過7道精心設計的題目，探索你專屬的「茶色人格」。你是溫柔細膩的提提柔、理性通透的柚柚安、陽光開朗的芒芒晴，還是古靈精怪的芒芒藍？"
+                   data-en="Discover your unique 'Tea-Color Personality' through 7 carefully crafted questions. Are you the gentle Titirou, the rational Youyou'an, the sunny Mangmangqing, or the quirky Mangmanglan?">
+                    透過7道精心設計的題目，探索你專屬的「茶色人格」。你是溫柔細膩的提提柔、理性通透的柚柚安、陽光開朗的芒芒晴，還是古靈精怪的芒芒藍？
+                </p>
+            </div>
+            <button class="start-btn" onclick="startQuiz()" 
+                    data-zh="開始測試" data-en="Start Test">開始測試</button>
+        </div>
+    </div>
+
+    <!-- 測試頁面 -->
+    <div id="quiz-page" class="page">
+        <div class="quiz-container">
+            <!-- 進度條 -->
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <p class="progress-text" id="progress-text">第 1 / 7 題</p>
+            </div>
+
+            <!-- 題目卡片 -->
+            <div class="question-card">
+                <h2 class="question-text" id="question-text"></h2>
+                <div class="options-container" id="options-container">
+                    <!-- 選項將由JS動態生成 -->
+                </div>
+            </div>
+
+            <!-- 導航按鈕 -->
+            <div class="nav-buttons">
+                <button class="nav-btn prev-btn" id="prev-btn" onclick="previousQuestion()" 
+                        data-zh="← 上一題" data-en="← Previous">← 上一題</button>
+                <button class="nav-btn next-btn" id="next-btn" onclick="nextQuestion()" 
+                        data-zh="下一題 →" data-en="Next →">下一題 →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 結果頁面 -->
+    <div id="result-page" class="page">
+        <div class="result-container" id="result-card">
+            <div class="result-header">
+                <p class="result-label" data-zh="你的茶色人格是" data-en="Your Tea-Color Personality">你的茶色人格是</p>
+                <h1 class="result-name" id="result-name"></h1>
+                <p class="result-drink" id="result-drink"></p>
+            </div>
+            
+            <div class="result-character">
+                <img id="result-image" src="" alt="Character" class="character-img">
+            </div>
+
+            <div class="result-score">
+                <span class="score-label" data-zh="總分" data-en="Total Score">總分</span>
+                <span class="score-value" id="total-score"></span>
+            </div>
+
+            <div class="result-tagline" id="result-tagline"></div>
+
+            <div class="result-description" id="result-description"></div>
+
+            <!-- 雷達圖 -->
+            <div class="radar-section">
+                <h3 class="radar-title" data-zh="人格維度分析" data-en="Personality Dimensions">人格維度分析</h3>
+                <canvas id="radar-canvas" width="300" height="300"></canvas>
+                <div class="radar-legend">
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background: #B4505C;"></span>
+                        <span data-zh="治癒感" data-en="Healing">治癒感</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background: #E47B65;"></span>
+                        <span data-zh="活力感" data-en="Vitality">活力感</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background: #E5AB20;"></span>
+                        <span data-zh="理性感" data-en="Rationality">理性感</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot" style="background: #77B0DA;"></span>
+                        <span data-zh="靈動感" data-en="Agility">靈動感</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 結果頁面按鈕 -->
+        <div class="result-buttons">
+            <button class="result-btn restart-btn" onclick="restartQuiz()" 
+                    data-zh="重新測試" data-en="Retake Test">重新測試</button>
+            <button class="result-btn save-btn" onclick="saveResult()" 
+                    data-zh="保存結果" data-en="Save Result">保存結果</button>
+            <button class="result-btn share-btn" onclick="shareResult()" 
+                    data-zh="分享結果" data-en="Share Result">分享結果</button>
+        </div>
+
+        <!-- 優惠券提示 -->
+        <div class="coupon-section">
+            <p class="coupon-text" 
+               data-zh="分享測試結果即可在App獲得3元優惠券！"
+               data-en="Share your result to get a $3 coupon in the App!">
+                分享測試結果即可在App獲得3元優惠券！
+            </p>
+        </div>
+    </div>
+
+    <!-- 分享提示彈窗 -->
+    <div id="share-modal" class="modal">
+        <div class="modal-content">
+            <p class="modal-text" 
+               data-zh="請截圖保存你的結果，分享到社交媒體並帶上話題 #喜形於色 #HeyteaTrueColors"
+               data-en="Please screenshot your result and share on social media with hashtags #喜形於色 #HeyteaTrueColors">
+                請截圖保存你的結果，分享到社交媒體並帶上話題 #喜形於色 #HeyteaTrueColors
+            </p>
+            <button class="modal-close" onclick="closeModal()" data-zh="知道了" data-en="Got it">知道了</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
